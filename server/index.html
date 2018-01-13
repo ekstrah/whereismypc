@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<script src="jquery.min.js"></script>
+</head>
+
+<Body>
+
+<p><center>Current Track: <span id="trackinfo">No track information available at this time</span></p></center>
+
+<script>
+function radioTitle() {
+
+var url = 'tracktitle.txt';
+
+$.ajax({
+ type: 'GET',
+ url: url,
+ dataType: 'text',
+ success: function(data) {
+
+ $("#trackinfo").html(data)
+},
+
+error: function(e) {
+ console.log(e.message);
+}
+});
+
+}
+
+$(document).ready(function(){
+
+setTimeout(function(){radioTitle();}, 2000);
+setInterval(function(){radioTitle();}, 15000);
+
+});
+
+</script>
+
+</body>
+</head>
+</html>
