@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
+	"github.com/gorilsla/mux"
 	"os"
 	"bufio"
 	"strings"
@@ -43,6 +43,29 @@ func initPCServer() {
        log.Fatal(err)
    }
 }
+func writeToText() {
+  deleteFile()
+  f, err := os.OpenFile("serverList.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+  if err != nil {
+      log.Fatal(err)
+  }
+  for i := 0; i < len(pcServer)-1; i++ {
+    if _, err := f.Write([]byte(pcServer[i].IPaddress + " ")); err != nil {
+        log.Fatal(err)
+    }
+    if _, err := f.Write([]byte(pcServer[i].KeyValue + " ")); err != nil {
+        log.Fatal(err)
+    }
+    if _, err := f.Write([]byte(pcServer[i].PropertyTag + "\n")); err != nil {
+        log.Fatal(err)
+    }
+  }
+  if err := f.Close(); err != nil {
+      log.Fatal(err)
+  }
+
+  fmt.Println("Success")
+}
 
 func extractPacket(w http.ResponseWriter, r *http.Request)  {
 	w.Header().Set("Content-Type", "application/json")
@@ -61,22 +84,7 @@ func extractPacket(w http.ResponseWriter, r *http.Request)  {
 	pcServer = append(pcServer, Server)
 
 	///Save to File
-	f, err := os.OpenFile("serverList.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-			log.Fatal(err)
-	}
-	if _, err := f.Write([]byte(Server.IPaddress + " ")); err != nil {
-			log.Fatal(err)
-	}
-	if _, err := f.Write([]byte(Server.KeyValue + " ")); err != nil {
-			log.Fatal(err)
-	}
-	if _, err := f.Write([]byte(Server.PropertyTag + "\n")); err != nil {
-			log.Fatal(err)
-	}
-	if err := f.Close(); err != nil {
-			log.Fatal(err)
-	}
+	writeToText()
 
 	fmt.Println("Success")
 }
