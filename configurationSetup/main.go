@@ -2,24 +2,35 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
+
+	"github.com/lextoumbourou/goodhosts"
 )
 
 func main() {
-	editHost()
+	// editGoodHosts()
+	ViewGoodHosts()
 }
 
-func editHost() {
-	f, err := os.OpenFile("C:/Windows/System32/drivers/etc/hosts", os.O_APPEND|os.O_WRONLY, 0600)
+func ViewGoodHosts() {
+	hosts, err := goodhosts.NewHosts()
 	if err != nil {
 		panic(err)
 	}
-	defer f.Close()
 
-	len, err := f.WriteString("127.0.0.1 ekstrah.xyz")
-	if err != nil {
-		log.Fatalf("failed writing the file", err)
+	for _, line := range hosts.Lines {
+		fmt.Println(line.Raw)
 	}
-	fmt.Println(len)
+}
+
+func editGoodHosts() {
+	hosts, err := goodhosts.NewHosts()
+	if err != nil {
+		panic(err)
+	}
+
+	hosts.Add("127.0.0.1", "searchmyip.com")
+
+	if err := hosts.Flush(); err != nil {
+		panic(err)
+	}
 }
