@@ -75,5 +75,4 @@ func main() {
 	makeHttpPostReq(IPAddressString, KeyValue, PropertyTag)
 
 	fmt.Println(PropertyTag)
-	// if len(strings.TrimSpace(KeyValue)) == 0 {
 }
